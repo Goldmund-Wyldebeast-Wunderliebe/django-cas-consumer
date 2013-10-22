@@ -31,7 +31,8 @@ def _verify_cas1(ticket, service):
     try:
         verified = page.readline().strip()
         if verified == 'yes':
-            return page.readline().strip()
+            username = page.readline().strip()
+            return username
         else:
             return None
     finally:

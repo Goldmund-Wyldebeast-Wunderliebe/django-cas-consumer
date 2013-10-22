@@ -1,1 +1,5 @@
 *.pyc
+build/
+dist/
+.gitignore~
+django_cas_consumer.egg-info/
