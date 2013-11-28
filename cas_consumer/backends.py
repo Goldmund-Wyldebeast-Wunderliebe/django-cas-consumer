@@ -5,6 +5,8 @@ from django.conf import settings
 
 from django.contrib.auth.models import User, UNUSABLE_PASSWORD
 
+from cas_consumer.helpers import get_callback_func
+
 __all__ = ['CASBackend']
 
 service = settings.CAS_SERVICE
@@ -13,6 +15,9 @@ cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
 cas_logout = cas_base + settings.CAS_LOGOUT_URL
 cas_next_default = settings.CAS_NEXT_DEFAULT
+
+CAS_USER_GET_CALLBACK = getattr(settings, 'CAS_USER_GET_CALLBACK', None)
+CAS_USER_CREATE_CALLBACK = getattr(settings, 'CAS_USER_CREATE_CALLBACK', None)
 
 def _verify_cas1(ticket, service):
     """Verifies CAS 1.0 authentication ticket.
@@ -49,10 +54,24 @@ class CASBackend(object):
             return None
         try:
             user = User.objects.get(username=username)
+
+            # Custom callback to be fired after the user record has been successfully fetched.
+            if CAS_USER_GET_CALLBACK is not None:
+                callback_func = get_callback_func(CAS_USER_GET_CALLBACK)
+                if callback_func:
+                    callback_func(user)
+
         except User.DoesNotExist:
             # user will have an "unusable" password (thanks to James Bennett)
             user = User.objects.create_user(username, UNUSABLE_PASSWORD)
             user.save()
+
+            # Custom callback to be fired after the user has been created.
+            if CAS_USER_CREATE_CALLBACK is not None:
+                callback_func = get_callback_func(CAS_USER_CREATE_CALLBACK)
+                if callback_func:
+                    callback_func(user)
+
         if settings.CAS_USERINFO_CALLBACK is not None:
             settings.CAS_USERINFO_CALLBACK(user)
         return user
