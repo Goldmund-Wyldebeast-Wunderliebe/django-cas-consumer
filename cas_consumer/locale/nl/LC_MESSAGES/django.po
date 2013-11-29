@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-29 10:24+0100\n"
-"PO-Revision-Date: 2013-11-29 10:31+0100\n"
+"PO-Revision-Date: 2013-11-29 10:38+0100\n"
 "Last-Translator: Artur Barseghyan <barseghyan@goldmund-wyldebeast-wunderliebe.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -19,5 +19,5 @@ msgstr ""
 
 #: views.py:47
 msgid "Login succeeded. Welcome, {0}."
-msgstr "U bent succesvol ingelogd . Welkom, {0}."
+msgstr "Welkom, {0}. U bent succesvol ingelogd."
 
